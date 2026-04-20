@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hamara SarvaGram — Internal Magazine</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Mukta:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --sf:#F47920;--sf-d:#C9601A;--sf-l:#FEF0E6;
+  --bl:#2B398E;--bl-m:#3D52B8;--bl-l:#E8EBFB;
+  --gr:#8DC63F;--gr-d:#5E8F1E;--gr-l:#EDF7D6;
+  --bg:#F0F2F8;--ink:#1A1A1A;--mu:#6B6B73;--card:#fff;
+  --bdr:rgba(43,57,142,0.1);--radius:12px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Mukta',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:500;background:var(--bl);display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;box-shadow:0 2px 16px rgba(0,0,0,.2);}
+.nav-brand{font-family:'Playfair Display',serif;font-size:17px;color:#fff;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;}
+.issue-chip{font-size:10px;background:var(--sf);padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:.05em;}
+.nav-links{display:flex;gap:2px;}
+.nav-link{color:rgba(255,255,255,.75);font-size:13px;font-weight:500;padding:6px 12px;border-radius:20px;cursor:pointer;text-decoration:none;transition:all .15s;}
+.nav-link:hover,.nav-link.active{color:#fff;background:rgba(255,255,255,.12);}
+.nav-cta{background:var(--sf);color:#fff;border:none;padding:7px 16px;border-radius:20px;font-size:13px;font-weight:700;font-family:'Mukta',sans-serif;cursor:pointer;text-decoration:none;}
+.nav-cta:hover{background:var(--sf-d);}
+.hamburger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:4px;}
+.hamburger span{display:block;width:20px;height:2px;background:#fff;border-radius:2px;}
+@media(max-width:700px){.nav-links{display:none;}.nav-cta{display:none;}.hamburger{display:flex;}}
+
+/* ZONE TABS */
+.zone-bar{background:var(--bl-m);overflow-x:auto;scrollbar-width:none;white-space:nowrap;}
+.zone-bar::-webkit-scrollbar{display:none;}
+.zone-tabs{display:inline-flex;padding:0 12px;}
+.ztab{color:rgba(255,255,255,.65);font-size:13px;font-weight:600;padding:10px 16px;cursor:pointer;border:none;background:none;font-family:'Mukta',sans-serif;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+.ztab:hover{color:rgba(255,255,255,.9);}
+.ztab.active{color:#fff;border-bottom-color:var(--sf);}
+
+/* FLIPBOOK */
+.flipbook-wrap{background:var(--bl);padding:20px 20px 0;position:relative;overflow:hidden;}
+.flipbook-wrap::after{content:'';position:absolute;top:-50px;right:-50px;width:220px;height:220px;border-radius:50%;background:rgba(244,121,32,.08);pointer-events:none;}
+.fb-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.fm-chip{font-size:10px;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);padding:3px 10px;border-radius:20px;letter-spacing:.08em;text-transform:uppercase;}
+.fm-date{font-size:12px;color:rgba(255,255,255,.4);}
+.fb-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:20px;align-items:end;}
+@media(max-width:560px){.fb-grid{grid-template-columns:1fr;}}
+.fb-img-box{border-radius:12px 12px 0 0;overflow:hidden;height:230px;position:relative;}
+.fb-dummy{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:72px;}
+.fb-badge{position:absolute;top:10px;left:10px;background:var(--sf);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:10px;letter-spacing:.05em;}
+.fb-right{padding-bottom:20px;}
+.fb-kicker{font-size:11px;color:var(--sf);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+.fb-headline{font-family:'Playfair Display',serif;font-size:clamp(18px,3vw,26px);color:#fff;font-weight:700;line-height:1.25;margin-bottom:10px;}
+.fb-headline em{color:#A8C8FF;font-style:italic;}
+.fb-body{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:14px;}
+.fb-byline{display:flex;align-items:center;gap:8px;}
+.fb-av{width:28px;height:28px;border-radius:50%;background:var(--sf);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.fb-by{font-size:12px;color:rgba(255,255,255,.55);}
+.fb-by strong{color:rgba(255,255,255,.85);}
+.fb-dots{display:flex;gap:6px;margin-top:12px;}
+.fb-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:all .25s;border:none;padding:0;}
+.fb-dot.active{background:var(--sf);width:22px;border-radius:4px;}
+.fb-navbtn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.fb-navbtn:hover{background:rgba(255,255,255,.25);}
+
+/* STATS */
+.stats-bar{background:var(--bl-m);display:grid;grid-template-columns:repeat(4,1fr);}
+.sb-cell{padding:10px;text-align:center;border-right:1px solid rgba(255,255,255,.1);}
+.sb-cell:last-child{border-right:none;}
+.sb-n{font-family:'Playfair Display',serif;font-size:18px;color:#fff;font-weight:700;}
+.sb-l{font-size:10px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.05em;}
+
+/* MAIN BODY — BOX LAYOUT */
+.mag-body{padding:16px;max-width:960px;margin:0 auto;}
+
+/* SECTION HEADER */
+.sec-hd{display:flex;align-items:center;gap:8px;margin:20px 0 10px;}
+.sec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sec-title{font-size:11px;font-weight:700;color:var(--mu);letter-spacing:.1em;text-transform:uppercase;}
+.sec-line{flex:1;height:1px;background:var(--bdr);}
+
+/* GRID SYSTEM — equal proportion boxes */
+.grid-1{display:grid;grid-template-columns:1fr;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;}
+.grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:12px;}
+.grid-1-2{display:grid;grid-template-columns:1fr 2fr;gap:12px;}
+@media(max-width:700px){.grid-2,.grid-3,.grid-4,.grid-2-1,.grid-1-2{grid-template-columns:1fr;}}
+@media(min-width:701px) and (max-width:900px){.grid-3,.grid-4{grid-template-columns:1fr 1fr;}.grid-2-1,.grid-1-2{grid-template-columns:1fr 1fr;}}
+
+/* BOX CARD — base unit */
+.box{background:var(--card);border-radius:var(--radius);border:.5px solid var(--bdr);overflow:hidden;transition:transform .18s,box-shadow .18s;}
+.box:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(43,57,142,.1);}
+.box-img{overflow:hidden;position:relative;}
+.box-img-h120{height:120px;}
+.box-img-h150{height:150px;}
+.box-img-h180{height:180px;}
+.box-img-h220{height:220px;}
+.bi-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.g1{background:linear-gradient(135deg,#dde2f8,#b5c0ef);}
+.g2{background:linear-gradient(135deg,#d8f0c4,#ade080);}
+.g3{background:linear-gradient(135deg,#fde8d4,#f6be94);}
+.g4{background:linear-gradient(135deg,#d4edfb,#95cef0);}
+.g5{background:linear-gradient(135deg,#fff0db,#ffc870);}
+.g6{background:linear-gradient(135deg,#ead8fb,#c898f0);}
+.bi-emoji{font-size:44px;}
+.bi-tag{position:absolute;top:8px;left:8px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;}
+.tag-sf{background:var(--sf);color:#fff;}
+.tag-gr{background:var(--gr);color:#fff;}
+.tag-bl{background:var(--bl);color:#fff;}
+.box-body{padding:12px 14px;}
+.box-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;line-height:1.3;margin-bottom:3px;}
+.box-meta{font-size:11px;color:var(--mu);}
+.box-text{font-size:12px;color:var(--mu);line-height:1.5;margin-top:5px;}
+
+/* HIGHLIGHT BOX */
+.hl-box{background:var(--sf);border-radius:var(--radius);padding:16px;color:#fff;position:relative;overflow:hidden;}
+.hl-box::before{content:'★';position:absolute;right:12px;top:6px;font-size:52px;opacity:.12;}
+.hl-tag{font-size:10px;background:rgba(255,255,255,.25);padding:2px 9px;border-radius:10px;display:inline-block;margin-bottom:6px;letter-spacing:.07em;text-transform:uppercase;}
+.hl-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;line-height:1.3;margin-bottom:5px;}
+.hl-meta{font-size:11px;opacity:.8;}
+
+/* ACHIEVEMENT BOX */
+.ach-box{background:var(--card);border-radius:var(--radius);border:.5px solid var(--bdr);border-left:3px solid var(--gr);padding:14px 16px;transition:transform .18s,box-shadow .18s;}
+.ach-box:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08);}
+.ach-pill{background:var(--gr-l);color:var(--gr-d);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:5px;}
+.ach-name{font-size:13px;font-weight:700;margin-bottom:2px;}
+.ach-text{font-size:12px;color:var(--mu);line-height:1.4;}
+
+/* SPOTLIGHT BOX */
+.spot-box{background:var(--bl);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;align-items:center;text-align:center;}
+.spot-av{width:60px;height:60px;border-radius:50%;background:var(--sf);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;margin-bottom:12px;}
+.spot-name{font-family:'Playfair Display',serif;font-size:16px;color:#fff;font-weight:700;}
+.spot-role{font-size:11px;color:rgba(255,255,255,.55);margin-bottom:8px;}
+.spot-quote{font-size:13px;color:rgba(255,255,255,.82);font-style:italic;line-height:1.5;}
+.spot-award{margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;color:rgba(255,255,255,.4);}
+
+/* IDEA BOX */
+.idea-box{background:var(--card);border-radius:var(--radius);border:.5px solid var(--bdr);border-top:3px solid var(--bl);padding:12px 14px;transition:transform .18s;}
+.idea-box:hover{transform:translateY(-2px);}
+.idea-kick{font-size:10px;font-weight:700;color:var(--bl);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+.idea-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+.idea-text{font-size:12px;color:var(--mu);line-height:1.4;margin-bottom:8px;}
+.vote-row{display:flex;align-items:center;gap:8px;}
+.vbtn{background:none;border:1px solid var(--bdr);border-radius:20px;padding:3px 10px;font-size:12px;cursor:pointer;font-family:'Mukta',sans-serif;transition:all .15s;}
+.vbtn:hover,.vbtn.voted{border-color:var(--gr);color:var(--gr-d);background:var(--gr-l);}
+.vcnt{font-size:12px;color:var(--mu);}
+
+/* QUICK BYTES */
+.qb-box{background:var(--card);border-radius:var(--radius);border:.5px solid var(--bdr);padding:12px 14px;}
+.qb-item{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--bdr);}
+.qb-item:last-child{border-bottom:none;}
+.qb-num{width:22px;height:22px;border-radius:50%;background:var(--sf-l);color:var(--sf-d);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qb-txt{font-size:12px;line-height:1.4;}
+
+/* BIRTHDAY */
+.bday-box{background:var(--card);border-radius:var(--radius);border:.5px solid var(--bdr);padding:12px 14px;}
+.bday-hd{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
+.bday-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bdr);}
+.bday-item:last-child{border-bottom:none;}
+.bday-av{width:30px;height:30px;border-radius:50%;background:var(--sf-l);color:var(--sf-d);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--sf);}
+.bday-name{font-size:13px;font-weight:600;}
+.bday-role{font-size:11px;color:var(--mu);}
+
+/* ZONE NEWS */
+.zn-box{background:var(--card);border-radius:var(--radius);border:.5px solid var(--bdr);padding:12px 14px;transition:transform .18s;}
+.zn-box:hover{transform:translateY(-2px);}
+.zn-pill{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;display:inline-block;margin-bottom:5px;}
+.z-guj{background:#FFF3E0;color:#E65100;}
+.z-kar{background:#E8F5E9;color:#2E7D32;}
+.z-mah{background:#E3F2FD;color:#1565C0;}
+.z-raj{background:#FBE9E7;color:#BF360C;}
+.z-tel{background:#EDE7F6;color:#4527A0;}
+.zn-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+.zn-text{font-size:12px;color:var(--mu);line-height:1.4;}
+.zn-by{font-size:11px;color:var(--mu);margin-top:4px;}
+
+/* MOBILE NAV */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bdr);padding:6px 0 10px;z-index:300;}
+@media(max-width:700px){.bottom-nav{display:flex;}body{padding-bottom:64px;}}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;padding:2px 0;color:var(--mu);font-size:10px;background:none;border:none;font-family:'Mukta',sans-serif;}
+.bn-item.active{color:var(--bl);}
+.bn-icon{font-size:20px;}
+
+/* MOBILE MENU */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;}
+.overlay.show{display:block;}
+.mm{position:fixed;top:0;right:0;width:220px;height:100vh;background:var(--bl);z-index:450;transform:translateX(100%);transition:transform .3s;padding:16px 0;display:flex;flex-direction:column;}
+.mm.open{transform:none;}
+.mm-x{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0 16px;margin-bottom:12px;align-self:flex-end;}
+.mm-item{color:rgba(255,255,255,.8);font-size:14px;font-weight:500;padding:11px 20px;text-decoration:none;display:block;}
+.mm-item:hover{color:#fff;background:rgba(255,255,255,.1);}
+.mm-cta{background:var(--sf);color:#fff;margin:12px 16px 0;border-radius:8px;padding:11px;font-size:14px;font-weight:700;font-family:'Mukta',sans-serif;border:none;cursor:pointer;text-decoration:none;display:block;text-align:center;}
+
+/* LOADER */
+.loader{text-align:center;padding:24px;color:var(--mu);font-size:14px;}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--bdr);border-top-color:var(--bl);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty{text-align:center;padding:20px;color:var(--mu);font-size:13px;}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeMM()"></div>
+<div class="mm" id="mm">
+  <button class="mm-x" onclick="closeMM()">✕</button>
+  <a class="mm-item active" href="index.html">📰 Magazine</a>
+  <a class="mm-item" href="submit.html">✏️ Submit Thought</a>
+  <a class="mm-item" href="mysubs.html">📋 My Submissions</a>
+  <a class="mm-cta" href="submit.html">+ Add Your Thought</a>
+</div>
+
+<nav class="nav">
+  <div class="nav-brand" onclick="location.href='index.html'">
+    Hamara SarvaGram <span class="issue-chip">APR '26</span>
+  </div>
+  <div class="nav-links">
+    <a class="nav-link active" href="index.html">Magazine</a>
+    <a class="nav-link" href="submit.html">Submit</a>
+    <a class="nav-link" href="mysubs.html">My Submissions</a>
+  </div>
+  <a class="nav-cta" href="submit.html">+ Add Your Thought</a>
+  <button class="hamburger" onclick="openMM()"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="zone-bar">
+  <div class="zone-tabs">
+    <button class="ztab active" onclick="setZone('all',this)">🇮🇳 All Zones</button>
+    <button class="ztab" onclick="setZone('gujarat',this)">🏺 Gujarat</button>
+    <button class="ztab" onclick="setZone('karnataka',this)">🌿 Karnataka</button>
+    <button class="ztab" onclick="setZone('maharashtra',this)">🏔️ Maharashtra</button>
+    <button class="ztab" onclick="setZone('rajasthan',this)">🏜️ Rajasthan</button>
+    <button class="ztab" onclick="setZone('telangana',this)">🌾 Telangana</button>
+  </div>
+</div>
+
+<!-- FLIPBOOK -->
+<div class="flipbook-wrap" style="position:relative;">
+  <div class="fb-meta">
+    <span class="fm-chip">Issue 04 · Q2 2026</span>
+    <span class="fm-date">20 April 2026</span>
+  </div>
+  <div class="fb-grid">
+    <div style="position:relative;">
+      <div class="fb-img-box" id="fb-img-box">
+        <div class="fb-dummy g1" id="fb-dummy" style="font-size:72px;">🌾</div>
+        <span class="fb-badge" id="fb-badge">Cover Story</span>
+      </div>
+      <button class="fb-navbtn" style="left:8px;" onclick="flipBy(-1)">‹</button>
+      <button class="fb-navbtn" style="right:8px;" onclick="flipBy(1)">›</button>
+    </div>
+    <div class="fb-right">
+      <div class="fb-kicker" id="fb-kicker">Cover Story</div>
+      <div class="fb-headline" id="fb-headline">SarvaGram crosses <em>1.5 Lakh</em> households — a milestone built village by village</div>
+      <div class="fb-body" id="fb-body">From the farmlands of Vidarbha to the coastal hamlets of Kochi, our SarvaMitras now touch 150,000 rural families — 150,000 dreams financed, protected, and nurtured.</div>
+      <div class="fb-byline">
+        <div class="fb-av" id="fb-av">ET</div>
+        <div class="fb-by">By <strong id="fb-name">Editorial Team</strong></div>
+      </div>
+      <div class="fb-dots" id="fb-dots"></div>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="sb-cell"><div class="sb-n">1.5L+</div><div class="sb-l">Households</div></div>
+  <div class="sb-cell"><div class="sb-n">38K</div><div class="sb-l">Villages</div></div>
+  <div class="sb-cell"><div class="sb-n">630+</div><div class="sb-l">SarvaMitras</div></div>
+  <div class="sb-cell"><div class="sb-n">170+</div><div class="sb-l">Shoppes</div></div>
+</div>
+
+<div class="mag-body" id="mag-body">
+  <div class="loader"><span class="spinner"></span>Loading magazine…</div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="bn-item active" onclick="location.href='index.html'"><div class="bn-icon">📰</div>Feed</button>
+  <button class="bn-item" onclick="location.href='submit.html'"><div class="bn-icon">✏️</div>Submit</button>
+  <button class="bn-item" onclick="location.href='mysubs.html'"><div class="bn-icon">📋</div>Mine</button>
+</nav>
+
+<script src="supabase.js"></script>
+<script>
+let allContent = [], allBdays = [], currentZone = 'all', fbSlides = [], fbIdx = 0, fbTimer;
+const grads = ['g1','g2','g3','g4','g5','g6'];
+const emojis = {story:'🌾',achievement:'🏅',idea:'💡',announcement:'📣',thought:'💬',feedback:'⭐'};
+const zoneNames = {all:'All Zones',gujarat:'Gujarat',karnataka:'Karnataka',maharashtra:'Maharashtra',rajasthan:'Rajasthan',telangana:'Telangana'};
+const zoneClass = {gujarat:'z-guj',karnataka:'z-kar',maharashtra:'z-mah',rajasthan:'z-raj',telangana:'z-tel'};
+const votes = {};
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function ago(dt){const d=Math.floor((Date.now()-new Date(dt))/864e5);return d<=0?'Today':d===1?'Yesterday':d+'d ago';}
+function initials(n){return(n||'').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()||'??';}
+
+async function loadContent(zone){
+  try{
+    [allContent, allBdays] = await Promise.all([SG.getPublished(zone), SG.getBirthdays(zone)]);
+    buildFlipbook();
+    renderFeed();
+  }catch(e){
+    document.getElementById('mag-body').innerHTML='<div class="empty">Could not load content. Please refresh.</div>';
+  }
+}
+
+function setZone(zone,el){
+  currentZone=zone;
+  document.querySelectorAll('.ztab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('mag-body').innerHTML='<div class="loader"><span class="spinner"></span>Loading…</div>';
+  loadContent(zone);
+}
+
+function bySection(slug){
+  return allContent.filter(c=>c.section_slug===slug).sort((a,b)=>a.priority-b.priority);
+}
+
+function buildFlipbook(){
+  const top=[...bySection('top-highlight'),...bySection('whats-new').slice(0,2)];
+  fbSlides=top.slice(0,5);
+  if(!fbSlides.length){fbSlides=[{title:'Welcome to Hamara SarvaGram',content:'Share your stories, achievements and ideas.',emp_name:'Editorial Team',category:'story',section_slug:'top-highlight'}];}
+  const dots=document.getElementById('fb-dots');
+  dots.innerHTML=fbSlides.map((_,i)=>`<button class="fb-dot${i===0?' active':''}" onclick="flipTo(${i})"></button>`).join('');
+  flipTo(0);
+  clearInterval(fbTimer);
+  fbTimer=setInterval(()=>flipBy(1),5000);
+}
+
+function flipTo(i){
+  fbIdx=((i%fbSlides.length)+fbSlides.length)%fbSlides.length;
+  const s=fbSlides[fbIdx];
+  const g=grads[fbIdx%grads.length];
+  document.getElementById('fb-dummy').className='fb-dummy '+g;
+  document.getElementById('fb-dummy').style.fontSize='72px';
+  document.getElementById('fb-dummy').textContent=emojis[s.category]||'🌾';
+  document.getElementById('fb-badge').textContent=s.category==='achievement'?'🏅 Achievement':s.category==='idea'?'💡 Idea':'📰 Feature';
+  document.getElementById('fb-kicker').textContent=s.section_slug==='top-highlight'?'Cover Story':'From the Feed';
+  document.getElementById('fb-headline').innerHTML=esc(s.title).replace(/(\d[\d,.]+\+?)/g,'<em>$1</em>');
+  document.getElementById('fb-body').textContent=(s.content||'').slice(0,220)+(s.content&&s.content.length>220?'…':'');
+  document.getElementById('fb-av').textContent=initials(s.emp_name);
+  document.getElementById('fb-name').textContent=s.emp_name||'SarvaGram';
+  document.querySelectorAll('.fb-dot').forEach((d,j)=>d.classList.toggle('active',j===fbIdx));
+}
+function flipBy(dir){flipTo(fbIdx+dir);}
+
+function renderFeed(){
+  const highlight=bySection('top-highlight');
+  const news=bySection('whats-new');
+  const ach=bySection('achievements');
+  const ideas=bySection('ideas');
+  const spot=bySection('spotlight');
+  const ground=bySection('on-ground');
+  const qb=bySection('quick-bytes');
+  const zoneNews=bySection('zone-news');
+  let html='';
+
+  // TOP HIGHLIGHT
+  if(highlight.length){
+    html+=secHd('Top Highlight','var(--sf)');
+    html+=`<div class="grid-1" style="margin-bottom:12px;"><div class="hl-box"><div class="hl-tag">This Issue's Feature</div><div class="hl-title">${esc(highlight[0].title)}</div><div class="hl-meta">${esc(highlight[0].emp_name)} · ${ago(highlight[0].published_at||new Date())}</div></div></div>`;
+  }
+
+  // WHAT'S NEW — 3 equal boxes
+  if(news.length){
+    html+=secHd("What's New",'var(--bl)');
+    html+=`<div class="grid-${Math.min(news.length,3)}" style="margin-bottom:12px;">`;
+    news.slice(0,3).forEach((n,i)=>{
+      html+=`<div class="box"><div class="box-img box-img-h120"><div class="bi-ph ${grads[i%6]}"><span class="bi-emoji" style="font-size:36px;">${emojis[n.category]||'📄'}</span></div><span class="bi-tag tag-bl">${esc(catLabel(n.category))}</span></div><div class="box-body"><div class="box-title">${esc(n.title)}</div><div class="box-meta">${esc(n.emp_name)} · ${ago(n.published_at||new Date())}</div></div></div>`;
+    });
+    html+=`</div>`;
+  }
+
+  // ACHIEVEMENTS — 2 equal boxes
+  if(ach.length){
+    html+=secHd('Achievements','var(--gr)');
+    html+=`<div class="grid-2" style="margin-bottom:12px;">`;
+    ach.slice(0,4).forEach(a=>{
+      html+=`<div class="ach-box"><div class="ach-pill">🏅 ${esc(catLabel(a.category))}</div><div class="ach-name">${esc(a.emp_name)}</div><div class="ach-text">${esc((a.content||'').slice(0,130))}…</div></div>`;
+    });
+    html+=`</div>`;
+  }
+
+  // ON-GROUND (2 boxes) + SPOTLIGHT (1 box) — 3 equal
+  const gnd=ground.slice(0,2);
+  const sp=spot[0];
+  if(gnd.length||sp){
+    html+=secHd('On-Ground Moments + Spotlight','var(--sf)');
+    html+=`<div class="grid-3" style="margin-bottom:12px;">`;
+    gnd.forEach((g,i)=>{
+      html+=`<div class="box"><div class="box-img box-img-h150"><div class="bi-ph ${grads[(i+2)%6]}"><span class="bi-emoji">${emojis[g.category]||'🌾'}</span></div><span class="bi-tag tag-sf">${esc(zoneNames[g.zone_slug]||g.zone_slug)}</span></div><div class="box-body"><div class="box-title">${esc(g.title)}</div><div class="box-meta">${esc(g.emp_name)}</div><div class="box-text">${esc((g.content||'').slice(0,80))}…</div></div></div>`;
+    });
+    if(sp){
+      const ex=sp.extra_data||{};
+      html+=`<div class="spot-box"><div class="spot-av">${esc(ex.initials||initials(sp.emp_name))}</div><div class="spot-name">${esc(sp.emp_name)}</div><div class="spot-role">${esc(ex.role||'')}${ex.zone_name?' · '+esc(ex.zone_name):''}</div><div class="spot-quote">${esc((sp.content||'').slice(0,160))}</div>${ex.award?`<div class="spot-award">🏅 ${esc(ex.award)}</div>`:''}</div>`;
+    }
+    html+=`</div>`;
+  }
+
+  // IDEAS — 2 equal boxes
+  if(ideas.length){
+    html+=secHd('Ideas & Suggestions','var(--bl)');
+    html+=`<div class="grid-2" style="margin-bottom:12px;">`;
+    ideas.slice(0,4).forEach((idea,i)=>{
+      const v=votes[idea.id]||(idea.extra_data&&idea.extra_data.votes)||0;
+      html+=`<div class="idea-box"><div class="idea-kick">💡 ${esc(catLabel(idea.category))}</div><div class="idea-title">${esc(idea.title)}</div><div class="idea-text">${esc((idea.content||'').slice(0,100))}…</div><div class="vote-row"><button class="vbtn" onclick="doVote('${idea.id}',${v},this)">👍 Useful</button><span class="vcnt" id="vc-${idea.id}">${v} votes</span></div></div>`;
+    });
+    html+=`</div>`;
+  }
+
+  // ZONE NEWS
+  if(zoneNews.length){
+    html+=secHd('Zone Updates','var(--bl-m)');
+    html+=`<div class="grid-2" style="margin-bottom:12px;">`;
+    zoneNews.slice(0,6).forEach(z=>{
+      const zc=zoneClass[z.zone_slug]||'';
+      html+=`<div class="zn-box"><span class="zn-pill ${zc}">${esc(zoneNames[z.zone_slug]||z.zone_slug)}</span><div class="zn-title">${esc(z.title)}</div><div class="zn-text">${esc((z.content||'').slice(0,120))}…</div><div class="zn-by">— ${esc(z.emp_name)}</div></div>`;
+    });
+    html+=`</div>`;
+  }
+
+  // QUICK BYTES + BIRTHDAYS — 2 equal boxes
+  html+=secHd('Quick Bytes & Birthdays','var(--sf)');
+  html+=`<div class="grid-2" style="margin-bottom:20px;">`;
+  if(qb.length){
+    html+=`<div class="qb-box">`;
+    qb.slice(0,5).forEach((q,i)=>{
+      html+=`<div class="qb-item"><div class="qb-num">${i+1}</div><div class="qb-txt">${esc(q.title)}</div></div>`;
+    });
+    html+=`</div>`;
+  } else {
+    html+=`<div class="qb-box"><div class="qb-item"><div class="qb-num">1</div><div class="qb-txt">Submit thoughts by <strong>5th</strong> of each quarter.</div></div></div>`;
+  }
+  if(allBdays.length){
+    html+=`<div class="bday-box"><div class="bday-hd">🎂 Birthdays This Week</div>`;
+    allBdays.slice(0,6).forEach(b=>{
+      const bd=new Date(b.birth_date);
+      const lbl=bd.toLocaleDateString('en-IN',{month:'short',day:'numeric'});
+      html+=`<div class="bday-item"><div class="bday-av">${initials(b.emp_name)}</div><div><div class="bday-name">${esc(b.emp_name)}</div><div class="bday-role">${lbl} · ${esc(zoneNames[b.zone_slug]||b.zone_slug)}</div></div></div>`;
+    });
+    html+=`</div>`;
+  } else {
+    html+=`<div class="bday-box"><div class="bday-hd">🎂 Birthdays This Week</div><div class="empty" style="padding:16px 0;font-size:12px;">No birthdays this week.</div></div>`;
+  }
+  html+=`</div>`;
+
+  if(!html) html='<div class="empty">No content yet. Submit a thought to get started!</div>';
+  document.getElementById('mag-body').innerHTML=html;
+}
+
+function secHd(text,color){
+  return `<div class="sec-hd"><div class="sec-dot" style="background:${color};"></div><div class="sec-title">${text}</div><div class="sec-line"></div></div>`;
+}
+function catLabel(c){return{thought:'Thought',idea:'Idea',achievement:'Achievement',announcement:'Announcement',story:'Field Story',feedback:'Feedback'}[c]||c;}
+function doVote(id,base,btn){if(btn.classList.contains('voted'))return;btn.classList.add('voted');btn.textContent='👍 Voted!';votes[id]=(votes[id]||base)+1;const el=document.getElementById('vc-'+id);if(el)el.textContent=votes[id]+' votes';}
+function openMM(){document.getElementById('mm').classList.add('open');document.getElementById('overlay').classList.add('show');}
+function closeMM(){document.getElementById('mm').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
+
+loadContent('all');
+</script>
+</body>
+</html>
